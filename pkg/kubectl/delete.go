@@ -203,8 +203,8 @@ func (reaper *ReplicationControllerReaper) Stop(namespace, name string, timeout 
 			return err
 		}
 	}
-	falseVar := false
-	deleteOptions := &metav1.DeleteOptions{OrphanDependents: &falseVar}
+	policy := metav1.DeletePropagationForeground
+	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 	return rc.Delete(name, deleteOptions)
 }
 
@@ -274,8 +274,8 @@ func (reaper *ReplicaSetReaper) Stop(namespace, name string, timeout time.Durati
 		}
 	}
 
-	falseVar := false
-	deleteOptions := &metav1.DeleteOptions{OrphanDependents: &falseVar}
+	policy := metav1.DeletePropagationForeground
+	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 	return rsc.Delete(name, deleteOptions)
 }
 
@@ -311,8 +311,8 @@ func (reaper *DaemonSetReaper) Stop(namespace, name string, timeout time.Duratio
 		return err
 	}
 
-	falseVar := false
-	deleteOptions := &metav1.DeleteOptions{OrphanDependents: &falseVar}
+	policy := metav1.DeletePropagationForeground
+	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 	return reaper.client.DaemonSets(namespace).Delete(name, deleteOptions)
 }
 
@@ -339,8 +339,8 @@ func (reaper *StatefulSetReaper) Stop(namespace, name string, timeout time.Durat
 
 	// TODO: Cleanup volumes? We don't want to accidentally delete volumes from
 	// stop, so just leave this up to the statefulset.
-	falseVar := false
-	deleteOptions := &metav1.DeleteOptions{OrphanDependents: &falseVar}
+	policy := metav1.DeletePropagationForeground
+	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 	return statefulsets.Delete(name, deleteOptions)
 }
 
@@ -384,8 +384,8 @@ func (reaper *JobReaper) Stop(namespace, name string, timeout time.Duration, gra
 		return utilerrors.NewAggregate(errList)
 	}
 	// once we have all the pods removed we can safely remove the job itself.
-	falseVar := false
-	deleteOptions := &metav1.DeleteOptions{OrphanDependents: &falseVar}
+	policy := metav1.DeletePropagationForeground
+	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 	return jobs.Delete(name, deleteOptions)
 }
 
@@ -405,9 +405,9 @@ func (reaper *DeploymentReaper) Stop(namespace, name string, timeout time.Durati
 		return err
 	}
 	if deployment.Initializers != nil {
-		var falseVar = false
-		nonOrphanOption := metav1.DeleteOptions{OrphanDependents: &falseVar}
-		return deployments.Delete(name, &nonOrphanOption)
+		policy := metav1.DeletePropagationForeground
+		deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
+		return deployments.Delete(name, deleteOptions)
 	}
 
 	// Use observedGeneration to determine if the deployment controller noticed the pause.
@@ -450,9 +450,9 @@ func (reaper *DeploymentReaper) Stop(namespace, name string, timeout time.Durati
 
 	// Delete deployment at the end.
 	// Note: We delete deployment at the end so that if removing RSs fails, we at least have the deployment to retry.
-	var falseVar = false
-	nonOrphanOption := metav1.DeleteOptions{OrphanDependents: &falseVar}
-	return deployments.Delete(name, &nonOrphanOption)
+	policy := metav1.DeletePropagationForeground
+	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
+	return deployments.Delete(name, deleteOptions)
 }
 
 type updateDeploymentFunc func(d *extensions.Deployment)
