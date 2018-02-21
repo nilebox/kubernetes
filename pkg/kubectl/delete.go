@@ -203,7 +203,7 @@ func (reaper *ReplicationControllerReaper) Stop(namespace, name string, timeout 
 			return err
 		}
 	}
-	policy := metav1.DeletePropagationForeground
+	policy := metav1.DeletePropagationBackground
 	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 	return rc.Delete(name, deleteOptions)
 }
