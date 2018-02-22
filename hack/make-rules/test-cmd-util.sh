@@ -1680,7 +1680,7 @@ run_non_native_resource_tests() {
   kubectl "${kube_flags[@]}" delete resources myobj --cascade=true
 
   # Make sure it's gone
-  kube::test::get_object_assert resources "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert resources "{{range.items}}{{$id_field}}:{{end}}" ''
 
   # Test that we can create a new resource of type Foo
   kubectl "${kube_flags[@]}" create -f hack/testdata/CRD/foo.yaml "${kube_flags[@]}"
@@ -1761,7 +1761,7 @@ run_non_native_resource_tests() {
   kubectl "${kube_flags[@]}" delete foos test --cascade=true
 
   # Make sure it's gone
-  kube::test::get_object_assert foos "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert foos "{{range.items}}{{$id_field}}:{{end}}" ''
 
   # Test that we can create a new resource of type Bar
   kubectl "${kube_flags[@]}" create -f hack/testdata/CRD/bar.yaml "${kube_flags[@]}"
@@ -3055,7 +3055,7 @@ run_rs_tests() {
   kube::log::status "Deleting rs"
   kubectl delete rs frontend "${kube_flags[@]}"
   # Post-condition: no pods from frontend replica set
-  kube::test::get_object_assert 'pods -l "tier=frontend"' "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert 'pods -l "tier=frontend"' "{{range.items}}{{$id_field}}:{{end}}" ''
 
   ### Create and then delete a replica set with cascade=false, make sure it doesn't delete pods.
   # Pre-condition: no replica set exists
@@ -3070,7 +3070,7 @@ run_rs_tests() {
   kube::test::get_object_assert 'pods -l "tier=frontend"' "{{range.items}}{{$pod_container_name_field}}:{{end}}" 'php-redis:php-redis:php-redis:'
   # Cleanup
   kubectl delete pods -l "tier=frontend" "${kube_flags[@]}"
-  kube::test::get_object_assert pods "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert pods "{{range.items}}{{$id_field}}:{{end}}" ''
 
   ### Create replica set frontend from YAML
   # Pre-condition: no replica set exists
@@ -3158,7 +3158,7 @@ run_rs_tests() {
   # Command
   kubectl delete rs frontend "${kube_flags[@]}"
   # Post-condition: no replica set exists
-  kube::test::get_object_assert rs "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert rs "{{range.items}}{{$id_field}}:{{end}}" ''
 
   ### Create two replica sets
   # Pre-condition: no replica set exists
@@ -3175,7 +3175,7 @@ run_rs_tests() {
   # Command
   kubectl delete rs frontend redis-slave "${kube_flags[@]}" # delete multiple replica sets at once
   # Post-condition: no replica set exists
-  kube::test::get_object_assert rs "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert rs "{{range.items}}{{$id_field}}:{{end}}" ''
 
   ### Delete a rs with initializer
   # Pre-condition: no rs exists
@@ -3920,7 +3920,7 @@ run_pod_templates_tests() {
   # Command
   kubectl delete podtemplate nginx "${kube_flags[@]}"
   # Post-condition: No templates exist
-  kube::test::get_object_assert podtemplate "{{range.items}}{{.metadata.name}}:{{end}}" ''
+  kube::test::wait_object_assert podtemplate "{{range.items}}{{.metadata.name}}:{{end}}" ''
 
   set +o nounset
   set +o errexit
