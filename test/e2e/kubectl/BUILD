@@ -16,6 +16,7 @@ go_library(
     deps = [
         "//pkg/controller:go_default_library",
         "//pkg/kubectl/cmd/util:go_default_library",
+        "//test/e2e/apps:go_default_library",
         "//test/e2e/framework:go_default_library",
         "//test/e2e/generated:go_default_library",
         "//test/e2e/scheduling:go_default_library",

@@ -64,6 +64,7 @@ filegroup(
         "//docs:all-srcs",
         "//examples:all-srcs",
         "//hack:all-srcs",
+        "//kubernetes:all-srcs",
         "//pkg:all-srcs",
         "//plugin:all-srcs",
         "//staging:all-srcs",
