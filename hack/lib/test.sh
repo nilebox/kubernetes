@@ -62,6 +62,16 @@ kube::test::wait_object_assert() {
 }
 
 # Asserts that the output of a given get query is as expected.
+# Runs the query multiple times before failing it.
+# $1: Object on which get should be run
+# $2: The go-template to run on the result
+# $3: The expected output
+# $4: Additional args to be passed to kubectl
+kube::test::wait_long_object_assert() {
+  kube::test::object_assert 60 "$@"
+}
+
+# Asserts that the output of a given get query is as expected.
 # Can run the query multiple times before failing it.
 # $1: Number of times the query should be run before failing it.
 # $2: Object on which get should be run

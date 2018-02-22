@@ -3186,6 +3186,7 @@ run_rs_tests() {
   # Delete a rs
   kubectl delete rs nginx "${kube_flags[@]}"
   # check rs nginx doesn't exist
+  kube::test:wait_object_assert "{{range.items}}{{$id_field}}:{{end}}" ''
   output_message=$(! kubectl get rs nginx 2>&1 "${kube_flags[@]}")
   kube::test::if_has_string "${output_message}" '"nginx" not found'
 
@@ -3920,7 +3921,8 @@ run_pod_templates_tests() {
   # Command
   kubectl delete podtemplate nginx "${kube_flags[@]}"
   # Post-condition: No templates exist
-  kube::test::wait_object_assert podtemplate "{{range.items}}{{.metadata.name}}:{{end}}" ''
+  # TODO nilebox: looks like even 10 tries is sometimes not enough (GC is too busy?)
+  kube::test::wait_long_object_assert podtemplate "{{range.items}}{{.metadata.name}}:{{end}}" ''
 
   set +o nounset
   set +o errexit
