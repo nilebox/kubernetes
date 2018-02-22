@@ -59,6 +59,7 @@ import (
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/kubernetes/pkg/controller"
 	"k8s.io/kubernetes/pkg/kubectl/cmd/util"
+	"k8s.io/kubernetes/test/e2e/apps"
 	"k8s.io/kubernetes/test/e2e/framework"
 	"k8s.io/kubernetes/test/e2e/generated"
 	"k8s.io/kubernetes/test/e2e/scheduling"
@@ -1445,7 +1446,9 @@ metadata:
 			Expect(runOutput).To(ContainSubstring("stdin closed"))
 
 			By("verifying the job " + jobName + " was deleted")
-			_, err := c.BatchV1().Jobs(ns).Get(jobName, metav1.GetOptions{})
+			err := apps.WaitForJobNotExist(f.ClientSet, f.Namespace.Name, jobName)
+			Expect(err).NotTo(HaveOccurred())
+			_, err = c.BatchV1().Jobs(ns).Get(jobName, metav1.GetOptions{})
 			Expect(err).To(HaveOccurred())
 			Expect(apierrs.IsNotFound(err)).To(BeTrue())
 		})

@@ -214,6 +214,8 @@ var _ = SIGDescribe("CronJob", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		By("Ensuring job was deleted")
+		err = WaitForJobNotExist(f.ClientSet, f.Namespace.Name, job.Name)
+		Expect(err).NotTo(HaveOccurred())
 		_, err = framework.GetJob(f.ClientSet, f.Namespace.Name, job.Name)
 		Expect(err).To(HaveOccurred())
 		Expect(errors.IsNotFound(err)).To(BeTrue())
@@ -255,7 +257,7 @@ var _ = SIGDescribe("CronJob", func() {
 
 		// Job should get deleted when the next job finishes the next minute
 		By("Ensuring this job does not exist anymore")
-		err = waitForJobNotExist(f.ClientSet, f.Namespace.Name, finishedJobs[0])
+		err = WaitForJobNotExist(f.ClientSet, f.Namespace.Name, finishedJobs[0].Name)
 		Expect(err).NotTo(HaveOccurred())
 
 		By("Ensuring there is 1 finished job by listing jobs explicitly")
@@ -368,7 +370,7 @@ func waitForNoJobs(c clientset.Interface, ns, jobName string, failIfNonEmpty boo
 }
 
 // Wait for a job to not exist by listing jobs explicitly.
-func waitForJobNotExist(c clientset.Interface, ns string, targetJob *batchv1.Job) error {
+func WaitForJobNotExist(c clientset.Interface, ns, name string) error {
 	return wait.Poll(framework.Poll, cronJobTimeout, func() (bool, error) {
 		jobs, err := c.BatchV1().Jobs(ns).List(metav1.ListOptions{})
 		if err != nil {
@@ -376,7 +378,7 @@ func waitForJobNotExist(c clientset.Interface, ns string, targetJob *batchv1.Job
 		}
 		_, finishedJobs := filterActiveJobs(jobs)
 		for _, job := range finishedJobs {
-			if targetJob.Namespace == job.Namespace && targetJob.Name == job.Name {
+			if job.Name == name {
 				return false, nil
 			}
 		}

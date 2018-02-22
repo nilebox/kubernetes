@@ -3186,7 +3186,7 @@ run_rs_tests() {
   # Delete a rs
   kubectl delete rs nginx "${kube_flags[@]}"
   # check rs nginx doesn't exist
-  kube::test:wait_object_assert "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert "{{range.items}}{{$id_field}}:{{end}}" ''
   output_message=$(! kubectl get rs nginx 2>&1 "${kube_flags[@]}")
   kube::test::if_has_string "${output_message}" '"nginx" not found'
 

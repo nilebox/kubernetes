@@ -118,6 +118,8 @@ var _ = SIGDescribe("Job", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		By("Ensuring job was deleted")
+		err = WaitForJobNotExist(f.ClientSet, f.Namespace.Name, job.Name)
+		Expect(err).NotTo(HaveOccurred())
 		_, err = framework.GetJob(f.ClientSet, f.Namespace.Name, job.Name)
 		Expect(err).To(HaveOccurred())
 		Expect(errors.IsNotFound(err)).To(BeTrue())
