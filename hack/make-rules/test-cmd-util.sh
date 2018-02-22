@@ -2862,7 +2862,7 @@ run_deployment_tests() {
 
   ### Test kubectl create deployment should not fail validation
   # Pre-Condition: No deployment exists.
-  kube::test::get_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
   # Command
   kubectl create -f hack/testdata/deployment-with-UnixUserID.yaml "${kube_flags[@]}"
   # Post-Condition: Deployment "deployment-with-unixuserid" is created.
@@ -2873,7 +2873,7 @@ run_deployment_tests() {
   ### Test cascading deletion
   ## Test that rs is deleted when deployment is deleted.
   # Pre-condition: no deployment exists
-  kube::test::get_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
   # Create deployment
   kubectl create -f test/fixtures/doc-yaml/user-guide/deployment.yaml "${kube_flags[@]}"
   # Wait for rs to come up.
@@ -2903,7 +2903,7 @@ run_deployment_tests() {
 
   ### Auto scale deployment
   # Pre-condition: no deployment exists
-  kube::test::get_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
   # Command
   kubectl create -f test/fixtures/doc-yaml/user-guide/deployment.yaml "${kube_flags[@]}"
   kube::test::get_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" 'nginx-deployment:'
@@ -2917,7 +2917,7 @@ run_deployment_tests() {
 
   ### Rollback a deployment
   # Pre-condition: no deployment exists
-  kube::test::get_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
   # Command
   # Create a deployment (revision 1)
   kubectl create -f hack/testdata/deployment-revision1.yaml "${kube_flags[@]}"
@@ -2964,7 +2964,7 @@ run_deployment_tests() {
 
   ### Set image of a deployment
   # Pre-condition: no deployment exists
-  kube::test::get_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
   # Create a deployment
   kubectl create -f hack/testdata/deployment-multicontainer.yaml "${kube_flags[@]}"
   kube::test::get_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" 'nginx-deployment:'
@@ -3001,7 +3001,7 @@ run_deployment_tests() {
 
   ### Set env of a deployment
   # Pre-condition: no deployment exists
-  kube::test::get_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
   # Create a deployment
   kubectl create -f hack/testdata/deployment-multicontainer.yaml "${kube_flags[@]}"
   kubectl create -f hack/testdata/configmap.yaml "${kube_flags[@]}"
@@ -3026,7 +3026,7 @@ run_deployment_tests() {
 
   ### Delete a deployment with initializer
   # Pre-condition: no deployment exists
-  kube::test::get_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
+  kube::test::wait_object_assert deployment "{{range.items}}{{$id_field}}:{{end}}" ''
   # Create a deployment
   kubectl create --request-timeout=1 -f hack/testdata/deployment-with-initializer.yaml 2>&1 "${kube_flags[@]}" || true
   kube::test::get_object_assert 'deployment web' "{{$id_field}}" 'web'
