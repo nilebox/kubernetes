@@ -274,7 +274,7 @@ func (reaper *ReplicaSetReaper) Stop(namespace, name string, timeout time.Durati
 		}
 	}
 
-	policy := metav1.DeletePropagationForeground
+	policy := metav1.DeletePropagationBackground
 	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 	return rsc.Delete(name, deleteOptions)
 }
@@ -311,7 +311,7 @@ func (reaper *DaemonSetReaper) Stop(namespace, name string, timeout time.Duratio
 		return err
 	}
 
-	policy := metav1.DeletePropagationForeground
+	policy := metav1.DeletePropagationBackground
 	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 	return reaper.client.DaemonSets(namespace).Delete(name, deleteOptions)
 }
@@ -339,7 +339,7 @@ func (reaper *StatefulSetReaper) Stop(namespace, name string, timeout time.Durat
 
 	// TODO: Cleanup volumes? We don't want to accidentally delete volumes from
 	// stop, so just leave this up to the statefulset.
-	policy := metav1.DeletePropagationForeground
+	policy := metav1.DeletePropagationBackground
 	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 	return statefulsets.Delete(name, deleteOptions)
 }
@@ -384,7 +384,7 @@ func (reaper *JobReaper) Stop(namespace, name string, timeout time.Duration, gra
 		return utilerrors.NewAggregate(errList)
 	}
 	// once we have all the pods removed we can safely remove the job itself.
-	policy := metav1.DeletePropagationForeground
+	policy := metav1.DeletePropagationBackground
 	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 	return jobs.Delete(name, deleteOptions)
 }
@@ -405,7 +405,7 @@ func (reaper *DeploymentReaper) Stop(namespace, name string, timeout time.Durati
 		return err
 	}
 	if deployment.Initializers != nil {
-		policy := metav1.DeletePropagationForeground
+		policy := metav1.DeletePropagationBackground
 		deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 		return deployments.Delete(name, deleteOptions)
 	}
@@ -450,7 +450,7 @@ func (reaper *DeploymentReaper) Stop(namespace, name string, timeout time.Durati
 
 	// Delete deployment at the end.
 	// Note: We delete deployment at the end so that if removing RSs fails, we at least have the deployment to retry.
-	policy := metav1.DeletePropagationForeground
+	policy := metav1.DeletePropagationBackground
 	deleteOptions := &metav1.DeleteOptions{PropagationPolicy: &policy}
 	return deployments.Delete(name, deleteOptions)
 }
