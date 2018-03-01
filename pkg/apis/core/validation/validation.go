@@ -3461,7 +3461,7 @@ func ValidatePodTemplateUpdate(newPod, oldPod *core.PodTemplate) field.ErrorList
 	newPodJson, _ := json.Marshal(newPod)
 	oldPodJson, _ := json.Marshal(oldPod)
 	glog.V(2).Infof("ValidatePodTemplateUpdate: \n\nnewPod: %s\n\noldPod: %s", string(newPodJson), string(oldPodJson))
-	allErrs := ValidateObjectMetaUpdate(&oldPod.ObjectMeta, &newPod.ObjectMeta, field.NewPath("metadata"))
+	allErrs := ValidateObjectMetaUpdate(&newPod.ObjectMeta, &oldPod.ObjectMeta, field.NewPath("metadata"))
 	allErrs = append(allErrs, ValidatePodTemplateSpec(&newPod.Template, field.NewPath("template"))...)
 	return allErrs
 }

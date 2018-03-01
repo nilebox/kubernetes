@@ -238,7 +238,7 @@ func ValidateFinalizers(finalizers []string, fldPath *field.Path) field.ErrorLis
 
 // ValidateObjectMetaUpdate validates an object's metadata when updated
 func ValidateObjectMetaUpdate(newMeta, oldMeta *metav1.ObjectMeta, fldPath *field.Path) field.ErrorList {
-	glog.V(2).Infof("ValidateObjectMetaUpdate: \nnewMeta: %#v|noldMeta: %#v", newMeta, oldMeta)
+	glog.V(2).Infof("ValidateObjectMetaUpdate: \nnewMeta: %#v\noldMeta: %#v", newMeta, oldMeta)
 	newMetadata, err := meta.Accessor(newMeta)
 	if err != nil {
 		allErrs := field.ErrorList{}
@@ -255,6 +255,7 @@ func ValidateObjectMetaUpdate(newMeta, oldMeta *metav1.ObjectMeta, fldPath *fiel
 }
 
 func ValidateObjectMetaAccessorUpdate(newMeta, oldMeta metav1.Object, fldPath *field.Path) field.ErrorList {
+	glog.V(2).Infof("ValidateObjectMetaAccessorUpdate, newMeta: %#v, oldMeta: %#v", newMeta, oldMeta)
 	var allErrs field.ErrorList
 
 	if !RepairMalformedUpdates && newMeta.GetUID() != oldMeta.GetUID() {
