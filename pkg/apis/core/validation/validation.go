@@ -3458,7 +3458,9 @@ func ValidatePodTemplate(pod *core.PodTemplate) field.ErrorList {
 // ValidatePodTemplateUpdate tests to see if the update is legal for an end user to make. newPod is updated with fields
 // that cannot be changed.
 func ValidatePodTemplateUpdate(newPod, oldPod *core.PodTemplate) field.ErrorList {
-	glog.V(2).Infof("ValidatePodTemplateUpdate: \nnewPod: %#v|noldPod: %#v", newPod, oldPod)
+	newPodJson, _ := json.Marshal(newPod)
+	oldPodJson, _ := json.Marshal(oldPod)
+	glog.V(2).Infof("ValidatePodTemplateUpdate: \n\nnewPod: %#v\n\noldPod: %#v", string(newPodJson), string(oldPodJson))
 	allErrs := ValidateObjectMetaUpdate(&oldPod.ObjectMeta, &newPod.ObjectMeta, field.NewPath("metadata"))
 	allErrs = append(allErrs, ValidatePodTemplateSpec(&newPod.Template, field.NewPath("template"))...)
 	return allErrs
