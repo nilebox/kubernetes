@@ -133,7 +133,10 @@ func (gc *GarbageCollector) removeFinalizer(owner *node, targetFinalizer string)
 		}
 		// remove the owner from dependent's OwnerReferences
 		ownerObject.SetFinalizers(newFinalizers)
-		_, err = gc.updateObject(owner.identity, ownerObject)
+		glog.V(2).Infof("newFinalizers: %#v, item: %s", newFinalizers, owner.identity)
+		glog.V(2).Infof("ownerObject before: %#v", ownerObject)
+		updatedOwnerObject, err := gc.updateObject(owner.identity, ownerObject)
+		glog.V(2).Infof("ownerObject after: %#v", updatedOwnerObject)
 		return err
 	})
 	if errors.IsConflict(err) {
