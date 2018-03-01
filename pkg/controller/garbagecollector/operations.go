@@ -137,6 +137,9 @@ func (gc *GarbageCollector) removeFinalizer(owner *node, targetFinalizer string)
 		glog.V(2).Infof("ownerObject before: %#v", ownerObject)
 		updatedOwnerObject, err := gc.updateObject(owner.identity, ownerObject)
 		glog.V(2).Infof("ownerObject after: %#v", updatedOwnerObject)
+		if err != nil {
+			glog.V(2).Infof("failed to remove finalizer: %#v", err)
+		}
 		return err
 	})
 	if errors.IsConflict(err) {
