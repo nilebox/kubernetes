@@ -262,7 +262,7 @@ func (o *DeleteOptions) ReapResult(r *resource.Result, isDefaultDelete, quiet bo
 		if o.GracePeriod >= 0 {
 			options = metav1.NewDeleteOptions(int64(o.GracePeriod))
 		}
-		if err := reaper.Stop(info.Namespace, info.Name, o.Timeout, options); err != nil {
+		if err := reaper.Stop(info.Namespace, info.Name, o.WaitForDeletion, o.Timeout, options); err != nil {
 			return cmdutil.AddSourceToErr("stopping", info.Source, err)
 		}
 		if o.WaitForGracefulDeletion {

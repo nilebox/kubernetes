@@ -668,7 +668,7 @@ func runDelete(namespace, name string, mapping *meta.RESTMapping, c dynamic.Dyna
 	if gracePeriod >= 0 {
 		options = metav1.NewDeleteOptions(int64(gracePeriod))
 	}
-	if err := r.Stop(namespace, name, 2*time.Minute, options); err != nil {
+	if err := r.Stop(namespace, name, false, 2*time.Minute, options); err != nil {
 		return err
 	}
 	return nil

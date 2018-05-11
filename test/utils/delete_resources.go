@@ -79,7 +79,7 @@ func DeleteResourceUsingReaperWithRetries(c internalclientset.Interface, kind sc
 		return err
 	}
 	deleteFunc := func() (bool, error) {
-		err := reaper.Stop(namespace, name, 0, options)
+		err := reaper.Stop(namespace, name, true, 0, options)
 		if err == nil || apierrs.IsNotFound(err) {
 			return true, nil
 		}

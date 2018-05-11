@@ -723,7 +723,7 @@ func TestSimpleStop(t *testing.T) {
 		if err != nil {
 			t.Errorf("unexpected error: %v (%s)", err, test.test)
 		}
-		err = reaper.Stop("default", "foo", 0, nil)
+		err = reaper.Stop("default", "foo", false, 0, nil)
 		if err != nil && !test.expectError {
 			t.Errorf("unexpected error: %v (%s)", err, test.test)
 		}

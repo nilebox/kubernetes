@@ -74,3 +74,14 @@ func getUID(obj runtime.Object) (string, error) {
 	}
 	return string(accessor.GetUID()), nil
 }
+
+// TODO: Update the generated clientset to return the deleted object and then update the callers to use that.
+func DeleteWithRestClient(client RESTClient, name, namespace, resource string, isNamespaced bool, options *metav1.DeleteOptions) (runtime.Object, error) {
+	return client.Delete().
+		NamespaceIfScoped(namespace, isNamespaced).
+		Resource(resource).
+		Name(name).
+		Body(options).
+		Do().
+		Get()
+}

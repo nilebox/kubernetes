@@ -168,7 +168,7 @@ func stopDeployment(c clientset.Interface, internalClient internalclientset.Inte
 	Expect(err).NotTo(HaveOccurred())
 	timeout := 1 * time.Minute
 
-	err = reaper.Stop(ns, deployment.Name, timeout, metav1.NewDeleteOptions(0))
+	err = reaper.Stop(ns, deployment.Name, true, timeout, metav1.NewDeleteOptions(0))
 	Expect(err).NotTo(HaveOccurred())
 
 	framework.Logf("Ensuring deployment %s was deleted", deploymentName)
